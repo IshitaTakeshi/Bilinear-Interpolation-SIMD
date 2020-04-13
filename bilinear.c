@@ -126,7 +126,7 @@ int main(void) {
     const float coordinates_x[] = {1.2, 0.0, 0.9, 0.3, 1.9, 0.5, 1.0, 0.4};
     const float coordinates_y[] = {0.2, 1.2, 2.3, 2.9, 0.3, 0.4, 1.0, 2.0};
     const int n_coordinates = 8;
-    float *intensities = malloc(sizeof(float) * n_coordinates);
+    float intensities[n_coordinates];
 
     interpolation2d_(image, image_width,
                      coordinates_x, coordinates_y, n_coordinates,
@@ -137,6 +137,5 @@ int main(void) {
         printf("simd   : intensities[%d] = %f\n", i, intensities[i]);
         printf("normal : intensities[%d] = %f\n", i, intensity);
     }
-    free(intensities);
     return 0;
 }
