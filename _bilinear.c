@@ -5,6 +5,7 @@
 
 #include <stdio.h>
 #include <math.h>
+#include <assert.h>
 #include <immintrin.h>
 #include <xmmintrin.h>
 
@@ -98,6 +99,8 @@ void interpolation2d_(const float *image, const int image_width,
                       const float *coordinates_x, const float *coordinates_y,
                       const int n_coordinates,
                       float *intensities) {
+    assert(n_coordinates % N == 0);
+
     // reversed when set
     // offsets[0] = 0, offsets[1] = 1, ..., offsets[7] = 7
     __m256i offsets = _mm256_set_epi32(7, 6, 5, 4, 3, 2, 1, 0);
