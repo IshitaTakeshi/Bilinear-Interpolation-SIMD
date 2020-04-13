@@ -27,7 +27,7 @@ void print_m256(__m256 v) {
 
 
 void print_m256i(__m256i v) {
-    int *X = (int*) _mm_malloc(8 * sizeof(int), 32);
+    int *X = (int*)_mm_malloc(8 * sizeof(int), 32);
     _mm256_store_si256((__m256i *)X, v);
     for(int i = 0; i < 8; i++) {
         printf("v[%d] = %d\n", i, X[i]);
@@ -97,8 +97,7 @@ const int N = 8;
 
 void interpolation2d_(const float *image, const int image_width,
                       const float *coordinates_x, const float *coordinates_y,
-                      const int n_coordinates,
-                      float *intensities) {
+                      const int n_coordinates, float *intensities) {
     assert(n_coordinates % N == 0);
 
     // reversed when set
