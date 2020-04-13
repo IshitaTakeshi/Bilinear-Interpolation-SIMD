@@ -1,6 +1,6 @@
 ## Bilinear interpolation using SIMD
 
-This repository contains C implementation of bilinear interpolation and a Python wrapper of it
+This repository contains C implementation of bilinear interpolation and the Python wrapper of it
 
 ### Requirement
 
