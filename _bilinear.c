@@ -125,19 +125,25 @@ int main(void) {
     };
 
     const int image_width = 3;
-    const float coordinates_x[] = {1.2, 0.0, 0.9, 0.3, 1.9, 0.5, 1.0, 0.4};
-    const float coordinates_y[] = {0.2, 1.2, 2.3, 2.9, 0.3, 0.4, 1.0, 2.0};
-    const int n_coordinates = 8;
+    const float coordinates_x[] = {
+        1.2, 0.0, 0.9, 0.3, 1.9, 0.5, 1.0, 0.4,
+        0.1, 1.0, 0.0, 1.2, 0.9, 0.4, 0.8, 1.6
+    };
+    const float coordinates_y[] = {
+        0.2, 1.2, 2.3, 2.9, 0.3, 0.4, 1.0, 2.0,
+        2.0, 0.9, 0.2, 2.4, 0.0, 0.1, 1.2, 0.0
+    };
+    const int n_coordinates = 16;
     float intensities[n_coordinates];
 
     interpolation2d_(image, image_width,
                      coordinates_x, coordinates_y, n_coordinates,
                      intensities);
-    for(int i = 0; i < N; i++) {
+    for(int i = 0; i < n_coordinates; i++) {
         float intensity = interpolation1d_(image, image_width,
                                            coordinates_x[i], coordinates_y[i]);
-        printf("simd   : intensities[%d] = %f\n", i, intensities[i]);
-        printf("normal : intensities[%d] = %f\n", i, intensity);
+        printf("simd   : intensities[%2d] = %f\n", i, intensities[i]);
+        printf("normal : intensities[%2d] = %f\n", i, intensity);
     }
     return 0;
 }
