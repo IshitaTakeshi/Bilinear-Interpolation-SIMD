@@ -2,7 +2,7 @@
 
 This repository contains C implementation of bilinear interpolation and the Python wrapper of it
 
-### Requirement
+## Requirement
 
 CPU with AVX2 support
 
