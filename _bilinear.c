@@ -112,7 +112,7 @@ void interpolation2d_(const float *image, const int image_width,
         __m256 xs = _mm256_i32gather_ps(coordinates_x, indices, 4);
         __m256 ys = _mm256_i32gather_ps(coordinates_y, indices, 4);
         __m256 is = __interpolation(image, image_width, xs, ys);
-        _mm256_storeu_ps(&intensities[i*N], is);
+        _mm256_storeu_ps(&intensities[i], is);
     }
 }
 
