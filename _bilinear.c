@@ -1,7 +1,7 @@
 // LICENSE: Apache 2.0
 // Author : Takeshi Ishita
 // How to build
-// $ clang -g -Wall -mavx -mavx2 bilinear.c -o bilinear
+// $ clang -g -Wall -mavx -mavx2 _bilinear.c -o bilinear
 
 #include <stdio.h>
 #include <math.h>
