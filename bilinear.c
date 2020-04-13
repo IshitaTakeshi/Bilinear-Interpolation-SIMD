@@ -63,11 +63,6 @@ __m256 __interpolation(const float *image, const int image_width,
     __m256 clx = _mm256_sub_ps(cx, lx);
     __m256 cly = _mm256_sub_ps(cy, ly);
 
-    __m256 weights_ucx_ucy = _mm256_mul_ps(ucx, ucy);
-    __m256 weights_clx_ucy = _mm256_mul_ps(clx, ucy);
-    __m256 weights_ucx_cly = _mm256_mul_ps(ucx, cly);
-    __m256 weights_clx_cly = _mm256_mul_ps(clx, cly);
-
     __m256i lxi = _mm256_cvtps_epi32(lx);
     __m256i lyi = _mm256_cvtps_epi32(ly);
     __m256i uxi = _mm256_cvtps_epi32(ux);
@@ -84,10 +79,10 @@ __m256 __interpolation(const float *image, const int image_width,
     __m256 intensities_lxuy = _mm256_i32gather_ps(image, lxuyi, 4);
     __m256 intensities_uxuy = _mm256_i32gather_ps(image, uxuyi, 4);
 
-    __m256 ll_uc_uc = _mm256_mul_ps(intensities_lxly, weights_ucx_ucy);
-    __m256 ul_cl_uc = _mm256_mul_ps(intensities_uxly, weights_clx_ucy);
-    __m256 lu_uc_cl = _mm256_mul_ps(intensities_lxuy, weights_ucx_cly);
-    __m256 uu_cl_cl = _mm256_mul_ps(intensities_uxuy, weights_clx_cly);
+    __m256 ll_uc_uc = _mm256_mul_ps(intensities_lxly, _mm256_mul_ps(ucx, ucy));
+    __m256 ul_cl_uc = _mm256_mul_ps(intensities_uxly, _mm256_mul_ps(clx, ucy));
+    __m256 lu_uc_cl = _mm256_mul_ps(intensities_lxuy, _mm256_mul_ps(ucx, cly));
+    __m256 uu_cl_cl = _mm256_mul_ps(intensities_uxuy, _mm256_mul_ps(clx, cly));
 
     return _mm256_add_ps(
         _mm256_add_ps(ll_uc_uc, ul_cl_uc),
