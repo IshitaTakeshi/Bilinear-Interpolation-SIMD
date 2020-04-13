@@ -108,7 +108,7 @@ void interpolation2d_(const float *image, const int image_width,
         // indices = sliice(i, i+N)
         // xs = coordinates_x[indices]
         // ys = coordinates_y[indices]
-        __m256i indices = _mm256_add_epi32(_mm256_set1_ps(i), offsets);
+        __m256i indices = _mm256_add_epi32(_mm256_set1_epi32(i), offsets);
         __m256 xs = _mm256_i32gather_ps(coordinates_x, indices, 4);
         __m256 ys = _mm256_i32gather_ps(coordinates_y, indices, 4);
         __m256 is = __interpolation(image, image_width, xs, ys);
