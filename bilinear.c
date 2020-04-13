@@ -97,6 +97,8 @@ __m256 __interpolation(const float *image, const int image_width,
 
 
 const int N = 8;
+
+
 void interpolation2d_(const float *image, const int image_width,
                       const float *coordinates_x, const float *coordinates_y,
                       const int n_coordinates,
@@ -115,7 +117,6 @@ void interpolation2d_(const float *image, const int image_width,
         _mm256_storeu_ps(&intensities[i*N], is);
     }
 }
-
 
 
 int main(void) {
