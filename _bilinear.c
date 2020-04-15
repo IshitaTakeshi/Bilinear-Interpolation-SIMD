@@ -1,16 +1,11 @@
-// LICENSE: Apache 2.0
-// Author : Takeshi Ishita
-// How to build
-// $ clang -g -Wall -mavx -mavx2 _bilinear.c -o bilinear
-
 #include <math.h>
 #include <assert.h>
 #include <immintrin.h>
 #include <xmmintrin.h>
-#include "_print.h"
 
 
-float interpolation1d_(const float *image, const int width, float cx, float cy) {
+float interpolation_normal_(const float *image, const int width,
+                            float cx, float cy) {
     float lx = floor(cx);
     float ly = floor(cy);
     float ux = lx + 1.0;
@@ -26,8 +21,19 @@ float interpolation1d_(const float *image, const int width, float cx, float cy) 
 }
 
 
-__m256 __interpolation(const float *image, const int image_width,
-                       const __m256 cx, const __m256 cy) {
+void interpolation_normal(
+    const float *image, const int image_width,
+    const float *coordinates_x, const float *coordinates_y,
+    const int n_coordinates, float *intensities) {
+    for(int i = 0; i < n_coordinates; i++) {
+        intensities[i] = interpolation_normal_(
+            image, image_width, coordinates_x[i], coordinates_y[i]);
+    }
+}
+
+
+__m256 __interpolation_simd(const float *image, const int image_width,
+                            const __m256 cx, const __m256 cy) {
     __m256 lx = _mm256_round_ps(cx, _MM_FROUND_TO_NEG_INF | _MM_FROUND_NO_EXC);
     __m256 ly = _mm256_round_ps(cy, _MM_FROUND_TO_NEG_INF | _MM_FROUND_NO_EXC);
     __m256 ux = _mm256_add_ps(lx, _mm256_set1_ps(1));
@@ -69,9 +75,10 @@ __m256 __interpolation(const float *image, const int image_width,
 const int N = 8;
 
 
-void interpolation2d_(const float *image, const int image_width,
-                      const float *coordinates_x, const float *coordinates_y,
-                      const int n_coordinates, float *intensities) {
+void interpolation_simd(
+    const float *image, const int image_width,
+    const float *coordinates_x, const float *coordinates_y,
+    const int n_coordinates, float *intensities) {
     assert(n_coordinates % N == 0);
 
     // reversed when set
@@ -84,7 +91,7 @@ void interpolation2d_(const float *image, const int image_width,
         __m256i indices = _mm256_add_epi32(_mm256_set1_epi32(i), offsets);
         __m256 xs = _mm256_i32gather_ps(coordinates_x, indices, 4);
         __m256 ys = _mm256_i32gather_ps(coordinates_y, indices, 4);
-        __m256 is = __interpolation(image, image_width, xs, ys);
+        __m256 is = __interpolation_simd(image, image_width, xs, ys);
         _mm256_storeu_ps(&intensities[i], is);
     }
 }
