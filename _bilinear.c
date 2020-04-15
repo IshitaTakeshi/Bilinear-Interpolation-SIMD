@@ -50,25 +50,24 @@ __m256 __interpolation_simd(const float *image, const int image_width,
     __m256i uyi = _mm256_cvtps_epi32(uy);
 
     __m256i widths = _mm256_set1_epi32(image_width);
-    __m256i lxlyi = _mm256_add_epi32(_mm256_mullo_epi32(widths, lyi), lxi);
-    __m256i uxlyi = _mm256_add_epi32(_mm256_mullo_epi32(widths, lyi), uxi);
-    __m256i lxuyi = _mm256_add_epi32(_mm256_mullo_epi32(widths, uyi), lxi);
-    __m256i uxuyi = _mm256_add_epi32(_mm256_mullo_epi32(widths, uyi), uxi);
+    __m256i wl = _mm256_mullo_epi32(widths, lyi);
+    __m256i wu = _mm256_mullo_epi32(widths, uyi);
+    __m256i lxlyi = _mm256_add_epi32(wl, lxi);
+    __m256i uxlyi = _mm256_add_epi32(wl, uxi);
+    __m256i lxuyi = _mm256_add_epi32(wu, lxi);
+    __m256i uxuyi = _mm256_add_epi32(wu, uxi);
 
     __m256 intensities_lxly = _mm256_i32gather_ps(image, lxlyi, 4);
     __m256 intensities_uxly = _mm256_i32gather_ps(image, uxlyi, 4);
     __m256 intensities_lxuy = _mm256_i32gather_ps(image, lxuyi, 4);
     __m256 intensities_uxuy = _mm256_i32gather_ps(image, uxuyi, 4);
 
-    __m256 ll_uc_uc = _mm256_mul_ps(intensities_lxly, _mm256_mul_ps(ucx, ucy));
-    __m256 ul_cl_uc = _mm256_mul_ps(intensities_uxly, _mm256_mul_ps(clx, ucy));
-    __m256 lu_uc_cl = _mm256_mul_ps(intensities_lxuy, _mm256_mul_ps(ucx, cly));
-    __m256 uu_cl_cl = _mm256_mul_ps(intensities_uxuy, _mm256_mul_ps(clx, cly));
+    __m256 ll = _mm256_mul_ps(intensities_lxly, _mm256_mul_ps(ucx, ucy));
+    __m256 ul = _mm256_mul_ps(intensities_uxly, _mm256_mul_ps(clx, ucy));
+    __m256 lu = _mm256_mul_ps(intensities_lxuy, _mm256_mul_ps(ucx, cly));
+    __m256 uu = _mm256_mul_ps(intensities_uxuy, _mm256_mul_ps(clx, cly));
 
-    return _mm256_add_ps(
-        _mm256_add_ps(ll_uc_uc, ul_cl_uc),
-        _mm256_add_ps(lu_uc_cl, uu_cl_cl)
-    );
+    return _mm256_add_ps(_mm256_add_ps(ll, ul), _mm256_add_ps(lu, uu));
 }
 
 
