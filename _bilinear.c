@@ -5,7 +5,7 @@
 
 
 float interpolation_normal_(const float *image, const int width,
-                            float cx, float cy) {
+                            const float cx, const float cy) {
     float lx = floor(cx);
     float ly = floor(cy);
     float ux = lx + 1.0;
@@ -22,9 +22,9 @@ float interpolation_normal_(const float *image, const int width,
 
 
 void interpolation_normal(
-    const float *image, const int image_width,
-    const float *coordinates_x, const float *coordinates_y,
-    const int n_coordinates, float *intensities) {
+    const float *restrict image, const int image_width,
+    const float *restrict coordinates_x, const float *restrict coordinates_y,
+    const int n_coordinates, float *restrict intensities) {
     for(int i = 0; i < n_coordinates; i++) {
         intensities[i] = interpolation_normal_(
             image, image_width, coordinates_x[i], coordinates_y[i]);
