@@ -6,7 +6,7 @@
 
 void print_float_array(const float *array, const int size) {
     for(int i = 0; i < size; i++) {
-        printf("array[%d] = %f\n", i, array[i]);
+        printf("v[%d] = %f\n", i, array[i]);
     }
 }
 
@@ -14,9 +14,7 @@ void print_float_array(const float *array, const int size) {
 void print_m256(__m256 v) {
     float X[8];
     _mm256_store_ps(X, v);
-    for(int i = 0; i < 8; i++) {
-        printf("v[%d] = %f\n", i, X[i]);
-    }
+    print_float_array(X, 8);
 }
 
 
