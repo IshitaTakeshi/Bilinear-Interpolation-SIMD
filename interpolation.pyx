@@ -51,16 +51,16 @@ def interpolation_normal(cnp.ndarray[cnp.float32_t, ndim=2] image,
 
 def interpolation_cython(cnp.ndarray[cnp.float32_t, ndim=2] image,
                          cnp.ndarray[cnp.float32_t, ndim=2] coordinates):
-    cx = coordinates[:, 0]
-    cy = coordinates[:, 1]
-    lx = np.floor(cx)
-    ly = np.floor(cy)
-    ux = lx + 1.0
-    uy = ly + 1.0
-    lxi = lx.astype(np.int64)
-    lyi = ly.astype(np.int64)
-    uxi = ux.astype(np.int64)
-    uyi = uy.astype(np.int64)
+    cdef cnp.ndarray[cnp.float32_t, ndim=1] cx = coordinates[:, 0]
+    cdef cnp.ndarray[cnp.float32_t, ndim=1] cy = coordinates[:, 1]
+    cdef cnp.ndarray[cnp.float32_t, ndim=1] lx = np.floor(cx)
+    cdef cnp.ndarray[cnp.float32_t, ndim=1] ly = np.floor(cy)
+    cdef cnp.ndarray[cnp.float32_t, ndim=1] ux = lx + 1.0
+    cdef cnp.ndarray[cnp.float32_t, ndim=1] uy = ly + 1.0
+    cdef cnp.ndarray[cnp.int64_t, ndim=1] lxi = lx.astype(np.int64)
+    cdef cnp.ndarray[cnp.int64_t, ndim=1] lyi = ly.astype(np.int64)
+    cdef cnp.ndarray[cnp.int64_t, ndim=1] uxi = ux.astype(np.int64)
+    cdef cnp.ndarray[cnp.int64_t, ndim=1] uyi = uy.astype(np.int64)
     return (image[lyi, lxi] * (ux - cx) * (uy - cy) +
             image[lyi, uxi] * (cx - lx) * (uy - cy) +
             image[uyi, lxi] * (ux - cx) * (cy - ly) +
