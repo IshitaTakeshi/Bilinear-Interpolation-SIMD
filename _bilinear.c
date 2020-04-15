@@ -4,8 +4,8 @@
 #include <xmmintrin.h>
 
 
-float interpolation_normal_(const float *image, const int width,
-                            const float cx, const float cy) {
+float __interpolation_normal(const float *image, const int width,
+                             const float cx, const float cy) {
     float lx = floor(cx);
     float ly = floor(cy);
     float ux = lx + 1.0;
@@ -21,12 +21,12 @@ float interpolation_normal_(const float *image, const int width,
 }
 
 
-void interpolation_normal(
+void _interpolation_normal(
     const float *restrict image, const int image_width,
     const float *restrict coordinates_x, const float *restrict coordinates_y,
     const int n_coordinates, float *restrict intensities) {
     for(int i = 0; i < n_coordinates; i++) {
-        intensities[i] = interpolation_normal_(
+        intensities[i] = __interpolation_normal(
             image, image_width, coordinates_x[i], coordinates_y[i]);
     }
 }
@@ -74,7 +74,7 @@ __m256 __interpolation_simd(const float *image, const int image_width,
 const int N = 8;
 
 
-void interpolation_simd(
+void _interpolation_simd(
     const float *image, const int image_width,
     const float *coordinates_x, const float *coordinates_y,
     const int n_coordinates, float *intensities) {
