@@ -9,8 +9,9 @@ CPU with AVX2 support
 ### C implementation
 
 #### How to run
+
 ```
-$ clang -g -Wall -mavx -mavx2 _bilinear.c -o bilinear
+$ clang -g -Wall -mavx -mavx2 _bilinear.c _print.c main.c -o bilinear
 $ ./bilinear
 ```
 

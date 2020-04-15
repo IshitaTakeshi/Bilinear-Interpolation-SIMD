@@ -3,37 +3,11 @@
 // How to build
 // $ clang -g -Wall -mavx -mavx2 _bilinear.c -o bilinear
 
-#include <stdio.h>
 #include <math.h>
 #include <assert.h>
 #include <immintrin.h>
 #include <xmmintrin.h>
-
-
-void print_float_array(const float *array, const int size) {
-    for(int i = 0; i < size; i++) {
-        printf("array[%d] = %f\n", i, array[i]);
-    }
-}
-
-
-void print_m256(__m256 v) {
-    float X[8];
-    _mm256_store_ps(X, v);
-    for(int i = 0; i < 8; i++) {
-        printf("v[%d] = %f\n", i, X[i]);
-    }
-}
-
-
-void print_m256i(__m256i v) {
-    int *X = (int*)_mm_malloc(8 * sizeof(int), 32);
-    _mm256_store_si256((__m256i *)X, v);
-    for(int i = 0; i < 8; i++) {
-        printf("v[%d] = %d\n", i, X[i]);
-    }
-    _mm_free(X);
-}
+#include "_print.h"
 
 
 float interpolation1d_(const float *image, const int width, float cx, float cy) {
@@ -113,37 +87,4 @@ void interpolation2d_(const float *image, const int image_width,
         __m256 is = __interpolation(image, image_width, xs, ys);
         _mm256_storeu_ps(&intensities[i], is);
     }
-}
-
-
-int main(void) {
-    const float image[] = {
-        2.0, 3.0, 2.0,
-        1.0, 2.0, 4.0,
-        5.0, 2.0, 3.0,
-        4.0, 6.0, 3.0
-    };
-
-    const int image_width = 3;
-    const float coordinates_x[] = {
-        1.2, 0.0, 0.9, 0.3, 1.9, 0.5, 1.0, 0.4,
-        0.1, 1.0, 0.0, 1.2, 0.9, 0.4, 0.8, 1.6
-    };
-    const float coordinates_y[] = {
-        0.2, 1.2, 2.3, 2.9, 0.3, 0.4, 1.0, 2.0,
-        2.0, 0.9, 0.2, 2.4, 0.0, 0.1, 1.2, 0.0
-    };
-    const int n_coordinates = 16;
-    float intensities[n_coordinates];
-
-    interpolation2d_(image, image_width,
-                     coordinates_x, coordinates_y, n_coordinates,
-                     intensities);
-    for(int i = 0; i < n_coordinates; i++) {
-        float intensity = interpolation1d_(image, image_width,
-                                           coordinates_x[i], coordinates_y[i]);
-        printf("simd   : intensities[%2d] = %f\n", i, intensities[i]);
-        printf("normal : intensities[%2d] = %f\n", i, intensity);
-    }
-    return 0;
 }
