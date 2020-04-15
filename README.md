@@ -24,16 +24,16 @@ $ ./benchmark
 ### Python wraper
 #### Requirements
 
-For running main
+For main
 
 ```
 cython, numpy, scipy
 ```
 
-For benchmark, additionally
+For benchmark
 
 ```
-numba, scikit-image
+cython, numpy, numba, scikit-image
 ```
 
 #### How to build
