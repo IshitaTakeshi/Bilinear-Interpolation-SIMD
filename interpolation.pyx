@@ -3,7 +3,7 @@ import numpy as np
 
 
 cdef extern from "_bilinear.h":
-    void interpolation2d_(const float *image, const int image_width,
+    void interpolation_simd(const float *image, const int image_width,
                           const float *coordinates_x, const float *coordinates_y,
                           const int n_coordinates, float *intensities);
 
@@ -20,6 +20,6 @@ def interpolation(cnp.ndarray[cnp.float32_t, ndim=2] image,
     cdef int N = coordinates.shape[0]
     intensities = np.empty(N, dtype=np.float32)
     cdef float[:] intensities_view = intensities
-    interpolation2d_(&image_view[0], width, &xs[0], &ys[0], N,
+    interpolation_simd(&image_view[0], width, &xs[0], &ys[0], N,
                      &intensities_view[0])
     return intensities
