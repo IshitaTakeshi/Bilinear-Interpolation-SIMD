@@ -47,3 +47,21 @@ def interpolation_normal(cnp.ndarray[cnp.float32_t, ndim=2] image,
     _interpolation_normal(&image_view[0], width, &xs[0], &ys[0], N,
                           &intensities_view[0])
     return intensities
+
+
+def interpolation_cython(cnp.ndarray[cnp.float32_t, ndim=2] image,
+                         cnp.ndarray[cnp.float32_t, ndim=2] coordinates):
+    cx = coordinates[:, 0]
+    cy = coordinates[:, 1]
+    lx = np.floor(cx)
+    ly = np.floor(cy)
+    ux = lx + 1.0
+    uy = ly + 1.0
+    lxi = lx.astype(np.int64)
+    lyi = ly.astype(np.int64)
+    uxi = ux.astype(np.int64)
+    uyi = uy.astype(np.int64)
+    return (image[lyi, lxi] * (ux - cx) * (uy - cy) +
+            image[lyi, uxi] * (cx - lx) * (uy - cy) +
+            image[uyi, lxi] * (ux - cx) * (cy - ly) +
+            image[uyi, uxi] * (cx - lx) * (cy - ly))
