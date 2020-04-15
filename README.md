@@ -14,6 +14,12 @@ CPU with AVX2 support
 $ clang -g -Wall -mavx -mavx2 _bilinear.c _print.c main.c -o bilinear
 $ ./bilinear
 ```
+#### Benchmark
+
+```
+$ clang -Wall -Ofast -mavx -mavx2 _bilinear.c benchmark.c -o benchmark
+$ ./benchmark
+```
 
 ### Python wraper
 #### Requirements
@@ -25,11 +31,11 @@ cython, numpy, scipy
 #### How to build
 
 ```
-python3 setup.py build_ext --inplace
+$ python3 setup.py build_ext --inplace
 ```
 
 #### How to run
 
 ```
-python3 main.py
+$ python3 main.py
 ```
