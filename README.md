@@ -24,8 +24,16 @@ $ ./benchmark
 ### Python wraper
 #### Requirements
 
+For running main
+
 ```
 cython, numpy, scipy
+```
+
+For benchmark, additionally
+
+```
+numba, scikit-image
 ```
 
 #### How to build
@@ -38,4 +46,10 @@ $ python3 setup.py build_ext --inplace
 
 ```
 $ python3 main.py
+```
+
+#### Benchmark
+
+```
+$ python3 benchmark.py
 ```
