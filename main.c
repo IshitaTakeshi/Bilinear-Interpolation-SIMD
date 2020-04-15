@@ -23,10 +23,10 @@ int main(void) {
     float intensities_simd[n_coordinates];
     float intensities_normal[n_coordinates];
 
-    interpolation_simd(
+    _interpolation_simd(
         image, image_width, coordinates_x, coordinates_y,
         n_coordinates, intensities_simd);
-    interpolation_normal(
+    _interpolation_normal(
         image, image_width, coordinates_x, coordinates_y,
         n_coordinates, intensities_normal);
     for(int i = 0; i < n_coordinates; i++) {

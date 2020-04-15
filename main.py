@@ -1,6 +1,6 @@
 import numpy as np
 from scipy.ndimage import map_coordinates
-from interpolation import interpolation
+from interpolation import interpolation_simd
 
 
 def main():
@@ -10,7 +10,7 @@ def main():
     xs = np.random.uniform(0, width-1, N)
     ys = np.random.uniform(0, height-1, N)
     C = np.column_stack((xs, ys)).astype(np.float32)
-    intensities = interpolation(image, C)
+    intensities = interpolation_simd(image, C)
     print("interpolation result")
     print(intensities)
     print("ground truth")

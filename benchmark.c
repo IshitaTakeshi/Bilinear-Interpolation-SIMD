@@ -60,11 +60,12 @@ int main() {
 
     struct timespec start, end;
 
-    printf("n attempts = %ld\n", n_attempts);
+    printf("n attempts    = %ld\n", n_attempts);
+    printf("n coordinates = %ld\n", n_coordinates);
 
     gettime(&start);
     for(int i = 0; i < n_attempts; i++) {
-        interpolation_simd(
+        _interpolation_simd(
             image, image_width, coordinates_x, coordinates_y,
             n_coordinates, intensities_simd);
     }
@@ -73,7 +74,7 @@ int main() {
 
     gettime(&start);
     for(int i = 0; i < n_attempts; i++) {
-        interpolation_normal(
+        _interpolation_normal(
             image, image_width, coordinates_x, coordinates_y,
             n_coordinates, intensities_normal);
     }
