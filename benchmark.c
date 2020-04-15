@@ -17,12 +17,11 @@ void generate_image(float *image, const long n_pixels) {
 }
 
 
-void generate_coordinates(float *coordinates_x, float *coordinates_y,
-                          const int n_coordinates,
+void generate_coordinates(float *coordinates, const int n_coordinates,
                           const int image_width, const int image_height) {
     for(int i = 0; i < n_coordinates; i++) {
-        coordinates_x[i] = random_in_range(0.0, image_width);
-        coordinates_y[i] = random_in_range(0.0, image_height);
+        coordinates[i*2+0] = random_in_range(0.0, image_width);   // x
+        coordinates[i*2+1] = random_in_range(0.0, image_height);  // y
     }
 }
 
@@ -50,9 +49,8 @@ int main() {
 
     const long n_attempts = 100000;
     const long n_coordinates = 8000;
-    float coordinates_x[n_coordinates];
-    float coordinates_y[n_coordinates];
-    generate_coordinates(coordinates_x, coordinates_y, n_coordinates,
+    float coordinates[n_coordinates*2];  // flattened representation
+    generate_coordinates(coordinates, n_coordinates,
                          image_width, image_height);
 
     float intensities_simd[n_coordinates];
@@ -66,7 +64,7 @@ int main() {
     gettime(&start);
     for(int i = 0; i < n_attempts; i++) {
         _interpolation_simd(
-            image, image_width, coordinates_x, coordinates_y,
+            image, image_width, coordinates,
             n_coordinates, intensities_simd);
     }
     gettime(&end);
@@ -75,7 +73,7 @@ int main() {
     gettime(&start);
     for(int i = 0; i < n_attempts; i++) {
         _interpolation_normal(
-            image, image_width, coordinates_x, coordinates_y,
+            image, image_width, coordinates,
             n_coordinates, intensities_normal);
     }
     gettime(&end);

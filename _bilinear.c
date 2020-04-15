@@ -23,11 +23,11 @@ float __interpolation_normal(const float *image, const int width,
 
 void _interpolation_normal(
     const float *restrict image, const int image_width,
-    const float *restrict coordinates_x, const float *restrict coordinates_y,
-    const int n_coordinates, float *restrict intensities) {
+    const float *restrict coordinates, const int n_coordinates,
+    float *restrict intensities) {
     for(int i = 0; i < n_coordinates; i++) {
         intensities[i] = __interpolation_normal(
-            image, image_width, coordinates_x[i], coordinates_y[i]);
+            image, image_width, coordinates[2*i], coordinates[2*i+1]);
     }
 }
 
@@ -75,21 +75,22 @@ const int N = 8;
 
 
 void _interpolation_simd(
-    const float *image, const int image_width,
-    const float *coordinates_x, const float *coordinates_y,
-    const int n_coordinates, float *intensities) {
+    const float *restrict image, const int image_width,
+    const float *restrict coordinates, const int n_coordinates,
+    float *restrict intensities) {
+
     assert(n_coordinates % N == 0);
 
     // reversed when set
-    // offsets[0] = 0, offsets[1] = 1, ..., offsets[7] = 7
-    __m256i offsets = _mm256_set_epi32(7, 6, 5, 4, 3, 2, 1, 0);
+    // offsets_x[0] = 0, offsets_x[1] = 2, ..., offsets_x[7] = 14
+    __m256i offsets_x = _mm256_set_epi32(14, 12, 10, 8, 6, 4, 2, 0);
+    __m256i offsets_y = _mm256_set_epi32(15, 13, 11, 9, 7, 5, 3, 1);
     for(int i = 0; i < n_coordinates; i += N) {
-        // indices = sliice(i, i+N)
-        // xs = coordinates_x[indices]
-        // ys = coordinates_y[indices]
-        __m256i indices = _mm256_add_epi32(_mm256_set1_epi32(i), offsets);
-        __m256 xs = _mm256_i32gather_ps(coordinates_x, indices, 4);
-        __m256 ys = _mm256_i32gather_ps(coordinates_y, indices, 4);
+        __m256i base = _mm256_set1_epi32(2*i);
+        __m256i indices_x = _mm256_add_epi32(base, offsets_x);
+        __m256i indices_y = _mm256_add_epi32(base, offsets_y);
+        __m256 xs = _mm256_i32gather_ps(coordinates, indices_x, 4);
+        __m256 ys = _mm256_i32gather_ps(coordinates, indices_y, 4);
         __m256 is = __interpolation_simd(image, image_width, xs, ys);
         _mm256_storeu_ps(&intensities[i], is);
     }
