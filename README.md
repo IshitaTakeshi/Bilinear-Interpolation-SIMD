@@ -21,7 +21,7 @@ $ clang -Wall -Ofast -mavx -mavx2 _bilinear.c benchmark.c -o benchmark
 $ ./benchmark
 ```
 
-### Python wraper
+### Python wrapper
 #### Requirements
 
 For main
